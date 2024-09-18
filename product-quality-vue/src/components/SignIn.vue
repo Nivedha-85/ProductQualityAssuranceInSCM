@@ -4,7 +4,7 @@
   <div id="signIn">
     <v-dialog v-model="dialog" persistent width="800px" height="200px">
       <div>
-        <v-card width="800px" height="380px" style="overflow-x: hidden;">
+        <v-card width="800px" height="380px">
           <v-card-title class="primary lighten-1 white--text">
               <span class="headline" style="padding-left: 350px">LOGIN</span>
               <GoBack1 />
@@ -19,7 +19,7 @@
               </v-row>
               <v-row style="padding-bottom: 10px">
                 <v-col class="ml-7" cols="2">
-                  <v-btn class="primary" @click="IsSupplier()" > SUPPLIER </v-btn>
+                  <v-btn color="primary" @click="IsSupplier()" > SUPPLIER </v-btn>
                 </v-col>
                 <v-col class="ml-10" cols="2">
                   <v-btn color="primary" @click="IsManufacturer()" > MANUFACTURER </v-btn>
@@ -47,6 +47,7 @@
                   <v-btn color="primary" @click="dialog2 = true,dialog = false"> SIGNUP </v-btn>
               </v-col>
               </v-row>
+
         </v-card>
       </div>
   </v-dialog>
@@ -97,22 +98,126 @@
 </template>
 
 <script>
+import contractInstance from '../../../supplyChainInstance'
+import GoBack1 from './GoBack1'
+export default {
+  name: 'SignIn',
+  components: {
+    GoBack1
+  },
+  data: () => ({
+    valid: true,
+    dialog: true,
+    dialog2: false,
+    mainAddress: '0xA12b16d8aCDc921787bE89488F2eaF02b748F32C'
+  }),
+  methods: {
+    async goBack () {
+      this.$router.go('/SignIn')
+    },
+    async IsSupplier () {
+      const result2 = await contractInstance.methods.isSupplier(global.ethereum.selectedAddress).call()
+      console.log(result2)
+      if (result2) {
+        this.dialog = false
+        alert('This account is a registered supplier')
+        this.$router.push('/SignIn/Supplier')
+      } else {
+        alert("This account isn't registered supplier")
+      }
+    },
+    async IsManufacturer () {
+      console.log(window.ethereum.selectedAddress)
+      const result2 = await contractInstance.methods.isManufacturer(window.ethereum.selectedAddress).call()
+      console.log(result2)
+      if (result2) {
+        this.dialog = false
+        alert('This account is a registered manufacturer')
+        this.$router.push('/SignIn/Manufacturer')
+      } else {
+        alert("This account isn't registered manufacturer")
+      }
+    },
+    async IsDistributor () {
+      console.log(window.ethereum.selectedAddress)
+      const result2 = await contractInstance.methods.isDistributor(window.ethereum.selectedAddress).call()
+      console.log(result2)
+      if (result2) {
+        this.dialog = false
+        alert('This account is a registered distributor')
+        this.$router.push('/SignIn/Distributor')
+      } else {
+        alert("This account isn't a registered distributor")
+      }
+    },
+    async IsCustomer () {
+      console.log(window.ethereum.selectedAddress)
+      const result2 = await contractInstance.methods.isCustomer(window.ethereum.selectedAddress).call()
+      console.log(result2)
+      if (result2) {
+        this.dialog = false
+        alert('This account is a registered customer')
+        this.$router.push('/SignIn/Customer')
+      } else {
+        alert("This account isn't registered customer")
+      }
+    },
+    async AddSupplier () {
+      console.log(global.ethereum.selectedAddress)
+      try {
+        const result3 = await contractInstance.methods.addSupplier(global.ethereum.selectedAddress).send({from: this.mainAddress})
+        console.log(result3)
+        alert('Successful sign up')
+      } catch (err) {
+        console.log(err)
+        alert('This account is already a registered supplier')
+      }
+    },
+    async AddManufacturer () {
+      console.log(global.ethereum.selectedAddress)
+      try {
+        const result3 = await contractInstance.methods.addManufacturer(global.ethereum.selectedAddress).send({from: this.mainAddress})
+        console.log(result3)
+        alert('Successful sign up')
+      } catch (err) {
+        console.log(err)
+        alert('This account is already a registered manufacturer')
+      }
+    },
+    async AddDistributor () {
+      console.log(global.ethereum.selectedAddress)
+      try {
+        const result3 = await contractInstance.methods.addDistributor(global.ethereum.selectedAddress).send({from: this.mainAddress})
+        console.log(result3)
+        alert('Successful sign up')
+      } catch (err) {
+        console.log(err)
+        alert('This account is already a registered distributor')
+      }
+    },
+    async AddCustomer () {
+      console.log(global.ethereum.selectedAddress)
+      try {
+        const result3 = await contractInstance.methods.addCustomer(global.ethereum.selectedAddress).send({from: this.mainAddress})
+        console.log(result3)
+        alert('Successful sign up')
+      } catch (err) {
+        console.log(err)
+        alert('This account is already a registered customer')
+      }
+    }
+  }
+}
 </script>
 <style scoped>
 .bg{
   width: 100%;
-    height: 100%;
+    height: 95%;
     position: absolute;
     top: 0;
     left: 0;
-    background: url('../../../images/Home.gif') no-repeat center center;
-    background-size: 588px 538px;
-    background-color: #e5e7eb;
-    transform: scale(1);
-}
-.main{
-    background: linear-gradient(90deg, #dbe1e5 -5%, #e5e7eb 100%);
-    height: 100%;
-    width: 100%;
+    background: url('../../../images/delivery5.jpg') no-repeat center center;
+    background-size: cover;
+    transform: scale(1.1);
 }
 </style>

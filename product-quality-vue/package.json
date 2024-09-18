@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "description": "A Vue.js project",
-  "author": "namrathahv <namrathahv727@gmail.com>",
+  "author": "rheaannboby <ron123rhea@gmail.com>",
   "scripts": {
     "build": "node build/build.js",
     "lint": "eslint --ext .js,.vue src test/unit test/e2e/specs",

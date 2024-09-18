@@ -8,7 +8,7 @@
     class="mx-auto"
     max-width="250"
     height="370"
-    style="background-color: #d6eaff; margin-top:20px"
+    style="background-color: rgba(178, 218, 241, 0.967); margin-top:30px"
     elevation="6"
   >
   <v-img
@@ -16,7 +16,7 @@
       height="200px"
     ></v-img>
 
-    <v-card-text style="background-color: #d6eaff; font-size: medium; color: black" >
+    <v-card-text style="background-color: rgba(178, 218, 241, 0.967); font-size: medium; color: black" >
       Manufacturer can verify the components by clicking the Verify Component Button
     </v-card-text>
     <div class="text-center">
@@ -68,14 +68,14 @@
     class="mx-auto"
     max-width="250"
     height="370"
-    style="background-color: #d6eaff; margin-top:20px"
+    style="background-color: rgba(178, 218, 241, 0.967); margin-top:30px"
     elevation="6"
   >
     <v-img
       :src="require('../../../images/manufacturer.jpg')"
       height="200px"
     ></v-img>
-    <v-card-text style="background-color: #d6eaff; font-size:medium; color: black" >
+    <v-card-text style="background-color: rgba(178, 218, 241, 0.967); font-size:medium; color: black" >
       Manufacturer can add the details of the products by clicking the New Product Button
     </v-card-text>
     <div class="text-center">
@@ -102,7 +102,7 @@
                   <v-text-field dense outlined v-model="newProduct.product_model" label="Model"></v-text-field>
                 </v-col>
                 <v-col cols="9" >
-                  <v-text-field dense outlined v-model="newProduct.product_info" label="Information"></v-text-field>
+                  <v-text-field dense outlined v-model="newProduct.product_info" label="Info"></v-text-field>
                 </v-col>
               </v-row>
             </v-container>
@@ -211,27 +211,27 @@
     class="mx-auto"
     max-width="250"
     height="370"
-    style="background-color: #d6eaff; margin-top:20px"
+    style="background-color: rgba(178, 218, 241, 0.967); margin-top:30px"
     elevation="6"
   >
     <v-img
       :src="require('../../../images/manu2.jpg')"
       height="200px"
     ></v-img>
-    <v-card-text style="background-color: #d6eaff; font-size:medium; color: black" >
-      Manufacturer can dispatch the products to the Distributor by clicking the Dispatch Product button
+    <v-card-text style="background-color: rgba(178, 218, 241, 0.967); font-size:medium; color: black" >
+      Manufacturer can dispatch the products to the distributor by clicking the Dispatch Product button
     </v-card-text>
 
     <div class="text-center">
       <v-dialog v-model="dialog3" width="500">
         <template v-slot:activator="{ on, attrs }">
           <v-btn class="elevation-6" color="primary" light v-bind="attrs" v-on="on" >
-            Test & Dispatch
+            Dispatch Product
           </v-btn>
         </template>
         <v-card>
           <v-card-title class= "text-h5 text-center primary lighten-1" style="color: white; padding-left: 190px">
-            Test & Dispatch
+            Dispatch
           </v-card-title>
           <v-card-text>
             <v-container >
@@ -295,15 +295,15 @@
     class="mx-auto"
     max-width="250"
     height="370"
-    style="background-color: #d6eaff; margin-top:20px"
+    style="background-color: rgba(178, 218, 241, 0.967); margin-top:30px"
     elevation="6"
   >
     <v-img
       :src="require('../../../images/manu4.jpg')"
       height="200px"
     ></v-img>
-    <v-card-text style="background-color: #d6eaff; font-size:medium; color: black" >
-      Manufacturer can view the details of the products by clicking the View Product Details Button
+    <v-card-text style="background-color: rgba(178, 218, 241, 0.967); font-size:medium; color: black" >
+      Manufacturer can view the details of all the products by clicking the View Details Button
     </v-card-text>
     <div class="text-center">
   <v-dialog v-model="dialogView" width="1000">
@@ -312,7 +312,7 @@
           View Product Details
         </v-btn>
       </template>
-      <v-card height="505px" width="1500px">
+      <v-card height="500px" width="1500px">
         <v-card-title class="text-h5 primary lighten-1" style="color:white; font-family: Georgia, 'Times New Roman', Times, serif">
           Products
           <v-spacer></v-spacer>
@@ -320,7 +320,7 @@
         v-model="search"
         append-icon="mdi-magnify"
         label="Search"
-        color="white"
+        color="black"
         single-line
         hide-details
       ></v-text-field>
@@ -335,15 +335,7 @@
       <v-card-text>
         <v-container>
           <!-- TABLE TO ENTER / EDIT PRODUCT DETAILS REGARDING THE ORDER IN THE FORM -->
-          <v-data-table :headers="headers" :items="productDetails" :search="search"  :items-per-page="5" class="elevation-9 mt-5" style="font-family:Arial, Helvetica, sans-serif">
-          <template v-slot:item.item_state="{ item }">
-            <v-chip
-              :color="getColor(item.item_state)"
-              dark
-            >
-            {{ item.item_state }}
-            </v-chip>
-            </template>
+          <v-data-table :headers="headers" :items="productDetails" :search="search" class="elevation-9 mt-5" style="font-family:Arial, Helvetica, sans-serif">
             <!-- WHAT TO DISPLAY IF THERE ARE NO PRODUCTS -->
             <template v-slot:no-data>
               No products available
@@ -383,10 +375,258 @@
 
 </template>
 <script>
+import manufacturerInstance from '../../../supplyChainInstance'
+import GoBack from './GoBack'
+export default {
+  name: 'Manufacturer',
+  components: {
+    GoBack
+  },
+  data: () => ({
+    dialog: false,
+    dialogView: false,
+    verification: false,
+    verified: false,
+    products: [],
+    productDetails: [],
+    itemstate: '',
+    verifyComponent: {
+      component_id: ''
+    },
+    newProduct: {
+      product_id: '',
+      product_name: '',
+      product_model: '',
+      product_info: '',
+      Components: []
+    },
+    defaultProduct: {
+      product_id: '',
+      product_name: '',
+      product_model: '',
+      product_info: '',
+      Components: []
+    },
+    search: '',
+    headers: [
+      {
+        text: 'Product ID',
+        align: 'center',
+        // sortable: false,
+        value: 'products_id',
+        width: '240px'
+      },
+      { text: 'Product Name', value: 'product_name', sortable: false, filterable: false, align: 'center', width: '240px' },
+      { text: 'Product Model', value: 'product_model', filterable: false, align: 'center', width: '240px' },
+      // eslint-disable-next-line standard/object-curly-even-spacing
+      { text: 'Product Info.', value: 'product_info', sortable: false, filterable: false, align: 'center', width: '240px'},
+      // eslint-disable-next-line standard/object-curly-even-spacing
+      { text: 'Components Used', value: 'components_used', sortable: false, filterable: false, align: 'center', width: '240px'},
+      { text: 'Components Verification Report', value: 'components_verification_report', sortable: false, filterable: false, align: 'center', width: '240px' },
+      { text: 'Distributor ID', value: 'distributor_id', sortable: false, filterable: false, align: 'center', width: '240px' },
+      { text: 'Customer ID', value: 'customer_id', sortable: false, filterable: false, align: 'center', width: '240px' },
+      { text: 'Item State', value: 'item_state', sortable: false, filterable: false, align: 'center', width: '240px' }
+    ],
+    headers2: [
+      {text: 'Sl.no', align: 'center', value: 'number', filterable: false, sortable: false},
+      {text: 'Component', align: 'center', value: 'component_id', filterable: false, sortable: false},
+      {text: 'Verification Report', align: 'center', value: 'componentVerificationReport', filterable: false, sortable: false},
+      { text: 'Actions', value: 'actions', sortable: false, filterable: false, align: 'center' }
+    ],
+    dialog2: false,
+    step: 1,
+    dialog3: false,
+    dispatchProd: {
+      product_id: '',
+      product_testReport: '',
+      distributor_id: ''
+    },
+    defaultDispatchProd: {
+      product_id: '',
+      product_testReport: '',
+      distributor_id: ''
+    },
+    rules: {
+      required: v => !!v || 'Distributor ID is required'
+    }
+  }),
+  methods: {
+    async IsManufacturer () {
+      console.log(window.ethereum.selectedAddress)
+      const result2 = await manufacturerInstance.methods.isManufacturer(window.ethereum.selectedAddress).call()
+      console.log(result2)
+      if (result2) {
+        alert('This account is a registered manufacturer')
+      } else {
+        alert("This account isn't registered manufacturer")
+      }
+    },
+    reset () {
+      this.verifyComponent = Object.assign({}, {component_id: ''})
+      this.verification = false
+    },
+    resetProduct () {
+      this.newProduct = Object.assign({}, this.defaultProduct)
+    },
+    async addComponent () {
+      console.log(this.newComponent)
+      try {
+        const result3 = await manufacturerInstance.methods.addManufacturer(window.ethereum.selectedAddress).send({from: '0x4590Af5c29F41Ffe9937CaA7839F9Bf4E912A1AD'})
+        console.log(result3)
+      } catch (err) {
+        console.log('Error' + err)
+        alert('This account is already a registered manufacturer')
+      }
+      this.reset()
+    },
+    async verifyComp (val) {
+      try {
+        const component = await manufacturerInstance.methods.fetchComponentDetails(val).call()
+        if (window.ethereum.selectedAddress === component.manufacturerID.toLowerCase()) {
+          this.verified = true
+        } else {
+          this.verified = false
+        }
+      } catch (err) {
+        console.log('Error: ' + err)
+        this.verified = false
+      }
+      this.verification = true
+    },
+    addComp () {
+      var comp = {}
+      comp.component_id = ''
+      comp.componentVerificationReport = ''
+      this.newProduct.Components.push(comp)
+    },
+    deleteComp (item) {
+      var index = this.newProduct.Components.indexOf(item)
+      this.newProduct.Components.splice(index, 1)
+    },
+    async createProductInstance () {
+      try {
+        const result = await manufacturerInstance.methods.productCreation(this.newProduct.product_id).send({from: window.ethereum.selectedAddress, gas: 3000000})
+        console.log('Product instance created' + result)
+      } catch (err) {
+        alert('Error in creating product')
+        console.log('Error : ' + err)
+      }
+    },
+    async addProductInfo () {
+      try {
+        const result2 = await manufacturerInstance.methods.ProductManufacture(this.newProduct.product_id, this.newProduct.product_name, this.newProduct.product_model, this.newProduct.product_info).send({from: window.ethereum.selectedAddress, gas: 3000000})
+        console.log('Product info added' + result2)
+      } catch (err) {
+        alert('Error adding product info')
+        console.log('Error : ' + err)
+      }
+    },
+    async integrateComponenets () {
+      try {
+        for (var i = 0; i < this.newProduct.Components.length; i++) {
+          const compInst = this.newProduct.Components[i]
+          const result3 = await manufacturerInstance.methods.ProductIntegration(this.newProduct.product_id, compInst.component_id, compInst.componentVerificationReport).send({from: window.ethereum.selectedAddress, gas: 3000000})
+          console.log(i + ' ' + result3)
+        }
+      } catch (err) {
+        alert('Error integrating components')
+        console.log('Error : ' + err)
+      }
+    },
+    async save () {
+      await this.createProductInstance()
+      await this.integrateComponenets()
+      await this.addProductInfo()
+      this.resetProduct()
+      this.step = 1
+    },
+    async verifyProd () {
+      try {
+        const result2 = await manufacturerInstance.methods.isDistributor(this.dispatchProd.distributor_id).call()
+        if (result2) {
+          this.verified = true
+          console.log(this.verified)
+          return true
+        } else {
+          this.verified = false
+          console.log(this.verified)
+          return false
+        }
+      } catch (err) {
+        console.log('Error : ' + err)
+        this.verified = false
+      }
+    },
+    resetDispatchProd () {
+      this.dispatchProd = Object.assign({}, this.defaultDispatchProd)
+      this.verified = ''
+    },
+    async dispatchProduct () {
+      console.log(this.dispatchProd)
+      try {
+        const result3 = await manufacturerInstance.methods.productTestingAndDispatch(this.dispatchProd.product_id, this.dispatchProd.product_testReport, this.dispatchProd.distributor_id).send({from: window.ethereum.selectedAddress, gas: 3000000})
+        console.log(result3)
+      } catch (err) {
+        console.log('Error' + err)
+        alert('Invalid entry')
+      }
+      this.resetDispatchProd()
+    },
+    async readProducts () {
+      this.products = []
+      try {
+        const result = await manufacturerInstance.methods.fetchProductsOfManufacturer().call({from: window.ethereum.selectedAddress})
+        for (var i = 0; i < result.length; i++) {
+          this.products.push(result[i])
+        }
+        console.log(this.products.length)
+      } catch (error) {
+        console.log('Error' + error)
+        alert('Invalid call')
+      }
+    },
+    itemStateToString (state) {
+      this.itemstate = ''
+      switch (state) {
+        case '0': this.itemstate = 'Created'
+          break
+        case '1': this.itemstate = 'Integrated'
+          break
+        case '2': this.itemstate = 'Manufactured'
+          break
+        case '3': this.itemstate = 'Tested and Dispatched'
+          break
+        case '4': this.itemstate = 'Purchased'
+          break
+        default: this.itemstate = 'Created'
+      }
+      console.log(state)
+      return this.itemstate
+    },
+    async fetchProductDetails () {
+      this.productDetails = []
+      try {
+        await this.readProducts()
+        console.log(this.products.length)
+        for (var i = 0; i < this.products.length; i++) {
+          console.log('inside for of fetch product details')
+          const details = await manufacturerInstance.methods.fetchProductDetails(this.products[i]).call({from: global.ethereum.selectedAddress})
+          // eslint-disable-next-line no-new-object
+          var info = Object.assign({}, {products_id: this.products[i], product_name: details.productName, product_model: details.productModel, product_info: details.productInfo, components_used: details.components, components_verification_report: details.componentVerificationReport, distributor_id: details.distributorID, customer_id: details.customerID, item_state: this.itemStateToString(details.itemState)})
+          this.productDetails.push(info)
+        }
+        console.log(this.productDetails)
+      } catch (error) {
+        console.log('Error' + error)
+        alert('Invalid call 2')
+      }
+    }
+  }
+}
 </script>
 <style scoped>
 .v-card__text {
-  color: rgba(0, 0, 0, 0.71) !important;
+  color: white!important;
 }
 .v-data-table__header{
   background-color: black;
